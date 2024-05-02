@@ -6,16 +6,102 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
-  <div class="wrapper">
-    <video class="flex" width="765" height="430" src="http://clips.vorwaerts-gmbh.de/VfE_html5.mp4" controls></video>
-    <div class="speed">
-      <div class="speed-bar">1×</div>
+   <div class="wrapper">
+      <video
+        class="flex"
+        width="765"
+        height="430"
+        src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+      ></video>
+      <div class="controls">
+        <button class="toggle">►</button>
+        <input
+          class="ctrl_slider"
+          type="range"
+          name="volume"
+          min="0"
+          max="1"
+          step="0.1"
+        />
+        <input
+          class="ctrl_slider"
+          type="range"
+          name="playbackRate"
+          min="0.5"
+          max="2"
+          step="0.1"
+        />
+        <button class="play-back" data-skip="-10">« 10s</button>
+        <button class="play-ford" data-skip="25">25s »</button>
+      </div>
+      <div class="progress">
+        <div class="progress__filled"></div>
+      </div>
     </div>
-  </div>
-
 <script  src="./script.js">
   //Your code goes here
+	let vid = document.querySelector(".flex");
+let toggle = document.querySelector(".toggle");
+let progress = document.querySelector(".progress");
+let progressBar = document.querySelector(".progress__filled");
+let playBack = document.querySelector(".play-back");
+let playFord = document.querySelector(".play-ford");
+let ctrlSlider = document.querySelectorAll(".ctrl_slider");
+
+function togglePlayPause() {
+  if (vid.paused || vid.ended) {
+    vid.play();
+  } else {
+    vid.pause();
+  }
+}
+
+function updateToggleHTML() {
+  toggle.innerHTML = vid.paused ? "►" : "❚❚";
+}
+
+function handleProgress() {
+  // console.log(vid.duration);
+  const progressPercentage = (vid.currentTime / vid.duration) * 100;
+  // console.log(progressPercentage);
+  progressBar.style.width = `${progressPercentage}%`;
+  // console.log("progressBar", progressBar.style.width);
+}
+
+function scrubT(e) {
+  const scrubTime = (e.offsetX / progress.offsetWidth) * vid.duration;
+  vid.currentTime = scrubTime;
+}
+
+function skipForward() {
+  vid.currentTime += parseInt(playFord.getAttribute("data-skip"));
+}
+function skipBackward() {
+  vid.currentTime += parseInt(playBack.getAttribute("data-skip"));
+}
+
+function handleCtrlSlider() {
+  console.log(`${vid[this.name]} ${this.value}`);
+  vid[this.name] = this.value;
+}
+
+toggle.addEventListener("click", togglePlayPause);
+vid.addEventListener("click", togglePlayPause);
+vid.addEventListener("play", updateToggleHTML);
+vid.addEventListener("pause", updateToggleHTML);
+vid.addEventListener("timeupdate", handleProgress);
+progress.addEventListener("click", scrubT);
+let mousedown = false;
+progress.addEventListener("mousedown", () => (mousedown = true));
+progress.addEventListener("mousemove", (e) => mousedown && scrubT(e));
+progress.addEventListener("mouseup", () => (mousedown = false));
+playFord.addEventListener("click", skipForward);
+playBack.addEventListener("click", skipBackward);
+ctrlSlider.forEach((slide) => {
+  console.log(slide);
+  slide.addEventListener("change", handleCtrlSlider);
+});
+
 </script>
 </body>
 </html>
