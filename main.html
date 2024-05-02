@@ -11,7 +11,7 @@
         class="flex"
         width="765"
         height="430"
-        src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+        src="https://www.w3schools.com/html/mov_bbb.mp4"
       ></video>
       <div class="controls">
         <button class="toggle">►</button>
@@ -68,7 +68,7 @@ function handleProgress() {
   // console.log("progressBar", progressBar.style.width);
 }
 
-function scrubT(e) {
+function scrub(e) {
   const scrubTime = (e.offsetX / progress.offsetWidth) * vid.duration;
   vid.currentTime = scrubTime;
 }
@@ -90,10 +90,10 @@ vid.addEventListener("click", togglePlayPause);
 vid.addEventListener("play", updateToggleHTML);
 vid.addEventListener("pause", updateToggleHTML);
 vid.addEventListener("timeupdate", handleProgress);
-progress.addEventListener("click", scrubT);
+progress.addEventListener("click", scrub);
 let mousedown = false;
 progress.addEventListener("mousedown", () => (mousedown = true));
-progress.addEventListener("mousemove", (e) => mousedown && scrubT(e));
+progress.addEventListener("mousemove", (e) => mousedown && scrub(e));
 progress.addEventListener("mouseup", () => (mousedown = false));
 playFord.addEventListener("click", skipForward);
 playBack.addEventListener("click", skipBackward);
